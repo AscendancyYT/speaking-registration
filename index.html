@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2 Speaking Exam Registration</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>B2 Speaking Exam Registration</h1>
+        <p>Sign up for your speaking exam below. All fields marked * are required.</p>
+        
+        <form id="registrationForm">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="phone">Phone Number * <span>(e.g., +998901234567)</span></label>
+            <input type="tel" id="phone" name="phone" placeholder="+998901234567" required>
+            
+            <label for="comments">Comments (Optional)</label>
+            <textarea id="comments" name="comments" rows="4"></textarea>
+            
+            <button type="submit">Register</button>
+        </form>
+        
+        <div id="message" class="message"></div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
