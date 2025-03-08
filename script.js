@@ -1,3 +1,25 @@
+
+async function AiIntegration() {
+  const script_prompt = `I am a speaking examiner of B2 level groups at Innovative Centre and I am examining a candidate named ${document.querySelector("#name").value}. Make the structure of test like IELTS test. Give me word-by-word script that can be followed. Do not use general terms like explain ${document.querySelector("#name").value} the test format, or Follows up with questions based on ${document.querySelector("#name").value} 's answer. Be very specific. By the way, do not include any other font rather than the basic one.`;
+
+  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          "Authorization":"Bearer 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",
+          "HTTP-Referer": "http://localhost",
+          "X-Title": "ExaminerAI"
+      },
+      body: JSON.stringify({
+          model: "google/gemini-pro", 
+          messages: [{ role: "user", content: script_prompt }]
+      })
+  });
+
+  const data = await response.json();
+  return data.choices[0].message.content;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   checkRegistrationStatus();
 });
@@ -35,7 +57,10 @@ document
     };
     localStorage.setItem("registeredUser", JSON.stringify(userData));
 
-    let message = `\ud83d\udccc New Registration!\n\ud83d\udc64 Name: ${name}\n\ud83d\udcde Phone: ${phone}\n✈️ Telegram: ${telegram}\n🆔 ID: ${candidateID}\n📅 Exam Date: ${formattedDate}`;
+    let response = await AiIntegration();  // ✅ Wait for the AI response
+
+    let message = `📌 New Registration!\n👤 Name: ${name}\n📞 Phone: ${phone}\n✈️ Telegram: ${telegram}\n🆔 ID: ${candidateID}\n📅 Exam Date: ${formattedDate} \n Script: ${response}`;
+    
 
     let success = await sendTelegramMessage(message);
     if (success) checkRegistrationStatus();
@@ -127,11 +152,11 @@ async function sendTelegramMessage(message) {
     axios.post(uri_api, {
       name: user.name,
       phoneNumber: user.phone,
-      telegram:  user.telegram,
+      telegram: user.telegram,
       examDate: user.examDate,
-      candidateID: user.candidateID
+      candidateID: user.candidateID,
     });
   }
 
   return response.ok;
-}
+}  
