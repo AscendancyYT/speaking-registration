@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 let maintanence = document.querySelector(".maintenance");
-let isMaintanence = true;
+let isMaintanence = false;
 
 if(isMaintanence == false){
   maintanence.style.display = "none"
