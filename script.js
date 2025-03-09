@@ -1,9 +1,9 @@
+let isMaintanence = true;
 document.addEventListener("DOMContentLoaded", function () {
   checkRegistrationStatus();
 });
 
 let maintanence = document.querySelector(".maintenance");
-let isMaintanence = false;
 
 if(isMaintanence == false){
   maintanence.style.display = "none"
