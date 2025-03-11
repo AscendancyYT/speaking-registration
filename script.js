@@ -39,37 +39,45 @@ document
       phone,
       telegram,
       candidateID,
-      examDate: formattedDate,
+      examDate: formattedDate, // Store ISO string
     };
+
     localStorage.setItem("registeredUser", JSON.stringify(userData));
 
-    let message = `\ud83d\udccc New Registration!\n\ud83d\udc64 Name: ${name}\n\ud83d\udcde Phone: ${phone}\n✈️ Telegram: ${telegram}\n🆔 ID: ${candidateID}\n📅 Exam Date: ${formattedDate}`;
+    console.log("Stored User Data:", localStorage.getItem("registeredUser")); // Debugging
+
+    let message = `📌 New Registration!\n👤 Name: ${name}\n📞 Phone: ${phone}\n✈️ Telegram: ${telegram}\n🆔 ID: ${candidateID}\n📅 Exam Date: ${formattedDate}`;
 
     let success = await sendTelegramMessage(message);
-    if (success) checkRegistrationStatus();
-    else alert("Failed to send registration. Please try again.");
+    if (success) {
+      console.log("Message sent successfully");
+      checkRegistrationStatus(); // Ensure UI updates
+    } else {
+      alert("Failed to send registration. Please try again.");
+    }
   });
 
-function checkRegistrationStatus() {
-  let storedUser = localStorage.getItem("registeredUser");
-  if (storedUser) {
-    let user = JSON.parse(storedUser);
-    let now = new Date();
-    let examDate = new Date(user.examDate);
 
-    if (now < examDate) {
-      document.getElementById("registrationSection").classList.add("hidden");
-      document.getElementById("examDetails").classList.remove("hidden");
-      document.getElementById(
-        "examDetails"
-      ).innerText = `✅ Registered!\n🆔 ${user.candidateID}\n📅 Exam Date: ${user.examDate}`;
-    } else {
-      localStorage.removeItem("registeredUser");
-      document.getElementById("registrationSection").classList.remove("hidden");
-      document.getElementById("examDetails").classList.add("hidden");
+  function checkRegistrationStatus() {
+    let storedUser = localStorage.getItem("registeredUser");
+    if (storedUser) {
+      let user = JSON.parse(storedUser);
+      let now = new Date();
+      let examDate = new Date(user.examDate);
+  
+      if (now < examDate) {
+        document.getElementById("registrationSection").classList.add("hidden");
+        document.getElementById("examDetails").classList.remove("hidden");
+        document.getElementById(
+          "examDetails"
+        ).innerText = `✅ Registered!\n🆔 ${user.candidateID}\n📅 Exam Date: ${user.examDate}`;
+      } else {
+        localStorage.removeItem("registeredUser");
+        document.getElementById("registrationSection").classList.remove("hidden");
+        document.getElementById("examDetails").classList.add("hidden");
+      }
     }
   }
-}
 
 function calculateExamTime() {
   let lastExamTime = localStorage.getItem("lastExamTime");
@@ -92,13 +100,7 @@ function calculateExamTime() {
 }
 
 function formatExamDate(date) {
-  let options = {
-    weekday: "long",
-    day: "2-digit",
-    month: "2-digit",
-    year: "2-digit",
-  };
-  return date.toLocaleDateString("en-GB", options).replace(",", "");
+  return (date.getMonth() + 1) + '/' + date.getDate() + '/' +  date.getFullYear();
 }
 
 async function sendTelegramMessage(message) {
@@ -143,4 +145,3 @@ async function sendTelegramMessage(message) {
 
   return response.ok;
 }
-
