@@ -58,26 +58,28 @@ document
   });
 
 
-  function checkRegistrationStatus() {
-    let storedUser = localStorage.getItem("registeredUser");
-    if (storedUser) {
-      let user = JSON.parse(storedUser);
-      let now = new Date();
-      let examDate = new Date(user.examDate);
-  
-      if (now < examDate) {
-        document.getElementById("registrationSection").classList.add("hidden");
-        document.getElementById("examDetails").classList.remove("hidden");
-        document.getElementById(
-          "examDetails"
-        ).innerText = `✅ Registered!\n🆔 ${user.candidateID}\n📅 Exam Date: ${user.examDate}`;
-      } else {
-        localStorage.removeItem("registeredUser");
-        document.getElementById("registrationSection").classList.remove("hidden");
-        document.getElementById("examDetails").classList.add("hidden");
-      }
+ function checkRegistrationStatus() {
+  let storedUser = localStorage.getItem("registeredUser");
+  if (storedUser) {
+    let user = JSON.parse(storedUser);
+    let now = new Date();
+    let examDate = new Date(user.examDate); // Ensure correct Date object
+
+    if (now < examDate) {
+      document.getElementById("registrationSection").classList.add("hidden");
+      document.getElementById("examDetails").classList.remove("hidden");
+      document.getElementById(
+        "examDetails"
+      ).innerText = `✅ Registered!\n🆔 ${user.candidateID}\n📅 Exam Date: ${new Date(user.examDate).toLocaleDateString()}`;
+    } else {
+      console.log("Exam passed! Clearing registration.");
+      localStorage.removeItem("registeredUser"); // Clear after exam
+      document.getElementById("registrationSection").classList.remove("hidden");
+      document.getElementById("examDetails").classList.add("hidden");
     }
   }
+}
+
 
 function calculateExamTime() {
   let lastExamTime = localStorage.getItem("lastExamTime");
