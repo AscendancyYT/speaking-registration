@@ -1,4 +1,4 @@
-let isMaintanence = false;
+let isMaintanence = true;
 document.addEventListener("DOMContentLoaded", function () {
   checkRegistrationStatus();
 });
